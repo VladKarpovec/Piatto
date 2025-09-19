@@ -5,8 +5,17 @@
     <title>Profile</title>
 </head>
 <body>
-<h1>Привіт, {{ user.username }}</h1>
-<a href="{% url 'logout' %}">Вийти</a>
+<h1>Мій профіль</h1>
+<p><strong>Ім’я користувача:</strong> {{ user.username }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+<p><strong>Ім’я:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+<p><strong>Роль:</strong> {{ user.profile.get_role_display }}</p>
+<p><strong>Біо:</strong> {{ user.profile.bio }}</p>
+{% if user.profile.avatar %}
+  <img src="{{ user.profile.avatar.url }}" alt="Avatar" width="150">
+{% endif %}
 
+<a href="{% url 'register:profile_edit' %}">Редагувати профіль</a>
+<a href="{% url 'register:home_auth' %}">Вийти</a>
 </body>
 </html>

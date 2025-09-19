@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Редагування профілю</title>
+</head>
+<body>
+<h1>Редагування профілю</h1>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <h3>Дані користувача</h3>
+  {{ user_form.as_p }}
+
+  <h3>Профіль</h3>
+  {{ profile_form.as_p }}
+
+  <button type="submit">Зберегти</button>
+</form>
+
+</body>
+</html>
