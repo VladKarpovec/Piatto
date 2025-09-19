@@ -1,16 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-<h1>Вхід</h1>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Увійти</button>
-</form>
+{% extends 'base_reg.html' %}
+{% block title %}Вхід{% endblock %}
 
-</body>
-</html>
+{% block content %}
+<h2 class="mb-4 text-center">Вхід</h2>
+
+<form method="post" novalidate class="row g-3">
+  {% csrf_token %}
+
+  <div class="col-12">
+    <label for="id_username" class="form-label">Ім’я користувача або Email</label>
+    {{ form.username }}
+  </div>
+
+  <div class="col-12">
+    <label for="id_password" class="form-label">Пароль</label>
+    {{ form.password }}
+  </div>
+
+  <div class="col-12">
+    <button type="submit" class="btn-main">Увійти</button>
+  </div>
+
+  <div class="col-12 text-center">
+    <a href="{% url 'register:register' %}" class="btn btn-link">
+      У мене немає акаунта
+    </a>
+  </div>
+</form>
+{% endblock %}

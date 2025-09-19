@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Вхід</title>
-</head>
-<body>
- <h2 class="mb-4">👋 Ласкаво просимо!</h2>
-  <p class="mb-4">Оберіть дію, щоб продовжити:</p>
-
-  <div class="d-grid gap-3">
-    <a href="{% url 'register:register' %}" class="btn btn-main">📝 Зареєструватися</a>
-    <a href="{% url 'register:login' %}" class="btn btn-main">🔑 Увійти</a>
-  </div>
-</form>
-</body>
-</html>
+{% extends 'base_reg.html' %}
+{% block title %}Вхід{% endblock %}
+{% block content %}
+<h2 class="mb-4 text-center">👋 Ласкаво просимо!</h2>
+<p class="mb-4 text-center">Оберіть дію, щоб продовжити:</p>
+<div class="d-grid gap-3">
+  <a href="{% url 'register:register' %}" class="btn btn-main">📝 Зареєструватися</a>
+  <a href="{% url 'register:login' %}" class="btn btn-main">🔑 Увійти</a>
+</div>
+{% endblock %}
