@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Категорії</h1>
+<ul>
+  {% for category in categories %}
+    <li>
+      <a href="{% url 'menu:category_detail' category.id %}">{{ category.name }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
+</body>
+</html>

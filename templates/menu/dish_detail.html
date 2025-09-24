@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>{{ dish.name }}</h1>
+<p>{{ dish.description }}</p>
+<p><b>Ціна:</b> {{ dish.price }} грн</p>
+{% if dish.image %}
+  <img src="{{ dish.image.url }}" width="200">
+{% endif %}
+<p><b>Інгредієнти:</b> {{ dish.ingredients }}</p>
+{% if dish.available %}
+  <p style="color:green;">✅ В наявності</p>
+{% else %}
+  <p style="color:red;">❌ Немає</p>
+{% endif %}
+
+</body>
+</html>
