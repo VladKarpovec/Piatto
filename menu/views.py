@@ -16,3 +16,9 @@ def category_detail(request, id):
 def dish_detail(request, id):
     dish = get_object_or_404(Dish, id=id)
     return render(request, "menu/dish_detail.html", {"dish": dish})
+
+
+def search(request):
+    query = request.GET.get("q")
+    dishes = Dish.objects.filter(name__icontains=query) if query else []
+    return render(request, "menu/search_results.html", {"dishes": dishes, "query": query})

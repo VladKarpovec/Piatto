@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+  <h2>Результати пошуку для "{{ query }}"</h2>
+  {% if dishes %}
+    <ul>
+      {% for dish in dishes %}
+        <li>
+          <a href="{% url 'menu:dish_detail' dish.id %}" class="dish-button">
+            {{ dish.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Нічого не знайдено.</p>
+  {% endif %}
+</body>
+</html>

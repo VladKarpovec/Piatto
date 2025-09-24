@@ -5,7 +5,14 @@
     <title>Title</title>
 </head>
 <body>
+
+<form method="get" action="{% url 'menu:search' %}">
+  <input type="text" name="q" placeholder="Пошук страви...">
+  <button type="submit">🔍</button>
+</form>
+
 <h1>Категорії</h1>
+
 <ul>
   {% for category in categories %}
     <li>
