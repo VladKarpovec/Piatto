@@ -1,25 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<form method="get" action="{% url 'menu:search' %}">
-  <input type="text" name="q" placeholder="Пошук страви...">
-  <button type="submit">🔍</button>
-</form>
+{% block title %}Категорії меню{% endblock %}
 
-<h1>Категорії</h1>
+{% block content %}
+  <div class="my-4">
+    <form class="input-group mb-4" method="get" action="{% url 'menu:search' %}">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Пошук страви..."
+        value="{{ request.GET.q|default:'' }}"
+      >
+      <button class="btn btn-custom" type="submit">
+        <i class="bi bi-search"></i>
+      </button>
+    </form>
 
-<ul>
-  {% for category in categories %}
-    <li>
-      <a href="{% url 'menu:category_detail' category.id %}">{{ category.name }}</a>
-    </li>
-  {% endfor %}
-</ul>
-
-</body>
-</html>
+    <h2 class="mb-3">Категорії</h2>
+    <div class="row g-3">
+      {% for category in categories %}
+        <div class="col-6 col-md-4 col-lg-3">
+          <a
+            href="{% url 'menu:category_detail' category.id %}"
+            class="card text-decoration-none text-center h-100 shadow-sm"
+          >
+            <div class="card-body">
+              <h5 class="card-title text-dark">{{ category.name }}</h5>
+            </div>
+          </a>
+        </div>
+      {% empty %}
+        <p>Немає доступних категорій.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

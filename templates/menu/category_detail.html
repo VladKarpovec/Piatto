@@ -1,18 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>{{ category.name }}</h1>
-<ul>
-  {% for dish in dishes %}
-    <li>
-      <a href="{% url 'menu:dish_detail' dish.id %}">{{ dish.name }}</a> — {{ dish.price }} грн
-    </li>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+  <h2 class="my-4">{{ category.name }}</h2>
+  <ul class="list-unstyled">
+    {% for dish in dishes %}
+      <li class="mb-2">
+        <a href="{% url 'menu:dish_detail' dish.id %}" class="btn btn-outline-dark btn-sm me-2">
+          {{ dish.name }}
+        </a>
+        — {{ dish.price }} грн
+        {% if not dish.in_stock %}
+          <span class="text-danger">(немає в наявності)</span>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>Немає страв у цій категорії.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

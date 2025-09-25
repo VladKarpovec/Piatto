@@ -1,22 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>{{ dish.name }}</h1>
-<p>{{ dish.description }}</p>
-<p><b>Ціна:</b> {{ dish.price }} грн</p>
-{% if dish.image %}
-  <img src="{{ dish.image.url }}" width="200">
-{% endif %}
-<p><b>Інгредієнти:</b> {{ dish.ingredients }}</p>
-{% if dish.available %}
-  <p style="color:green;">✅ В наявності</p>
-{% else %}
-  <p style="color:red;">❌ Немає</p>
-{% endif %}
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}{{ dish.name }}{% endblock %}
+
+{% block extra_css %}
+  {{ block.super }}
+  <style>
+    /* Контейнер фіксованого розміру з пропорційним зменшенням зображення */
+    .img-frame {
+      width: 400px;
+      height: 300px;
+      background: #f5f1ee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-radius: .5rem;
+    }
+    .img-frame img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="row my-4">
+    <div class="col-md-6">
+      <h1>{{ dish.name }}</h1>
+      <p>{{ dish.description }}</p>
+      <p><b>Ціна:</b> {{ dish.price }} грн</p>
+
+      {% if dish.image %}
+        <div class="img-frame shadow-sm mb-3">
+          <img
+            src="{{ dish.image.url }}"
+            alt="{{ dish.name }}"
+          >
+        </div>
+      {% endif %}
+
+      <p><b>Інгредієнти:</b> {{ dish.ingredients }}</p>
+
+      {% if dish.in_stock %}
+        <p class="text-success">✅ В наявності ({{ dish.stock }})</p>
+      {% else %}
+        <p class="text-danger">❌ Немає в наявності</p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

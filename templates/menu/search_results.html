@@ -1,24 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-  <h2>Результати пошуку для "{{ query }}"</h2>
-  {% if dishes %}
-    <ul>
-      {% for dish in dishes %}
-        <li>
-          <a href="{% url 'menu:dish_detail' dish.id %}" class="dish-button">
-            {{ dish.name }}
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Нічого не знайдено.</p>
-  {% endif %}
-</body>
-</html>
+{% block title %}Результати пошуку{% endblock %}
+
+{% block content %}
+  <div class="my-4">
+    <h2 class="mb-3">
+      Результати пошуку для 
+      <span class="text-muted">“{{ query }}”</span>
+    </h2>
+
+    {% if dishes %}
+      <div class="row g-4">
+        {% for dish in dishes %}
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <div class="card h-100 shadow-sm">
+              {% if dish.image %}
+                <img 
+                  src="{{ dish.image.url }}"
+                  class="card-img-top"
+                  alt="{{ dish.name }}"
+                >
+              {% endif %}
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ dish.name }}</h5>
+                <p class="card-text mb-2">{{ dish.price }} грн</p>
+                {% if dish.in_stock %}
+                  <span class="badge bg-success mb-2">В наявності ({{ dish.stock }})</span>
+                {% else %}
+                  <span class="badge bg-danger mb-2">Немає в наявності</span>
+                {% endif %}
+                <a 
+                  href="{% url 'menu:dish_detail' dish.id %}" 
+                  class="btn btn-custom mt-auto"
+                >
+                  Детальніше
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">Нічого не знайдено.</p>
+    {% endif %}
+  </div>
+{% endblock %}
