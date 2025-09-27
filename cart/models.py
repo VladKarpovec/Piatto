@@ -1,25 +1,18 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from menu.models import Dish
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
     email = models.EmailField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    STATUS_CHOICES = (
-        ("new", "Нове"),
-        ("confirmed", "Підтверджене"),
-        ("done", "Виконане"),
-    )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new")
-
-    def __str__(self):
-        return f"Замовлення #{self.id} ({self.email})"
+    is_confirmed = models.BooleanField(default=False)  # замовлення підтверджене?
+    token = models.UUIDField(default=uuid.uuid4, unique=True)  # унікальний токен для підтвердження
 
     @property
     def total_price(self):
-        return sum(item.total_price for item in self.items.all())
+        return sum(item.price * item.quantity for item in self.items.all())
 
 
 class OrderItem(models.Model):

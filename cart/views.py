@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-from django.urls import reverse
 from django.db import transaction
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
+from django.urls import reverse
+from django.core.mail import send_mail
+
 from django.conf import settings
 
 from .models import Dish, Order, OrderItem
@@ -55,6 +55,7 @@ def cart_detail(request):
     return render(request, 'cart/cart_detail.html', {'cart': cart, 'total': total})
 
 @require_POST
+@require_POST
 def order_create(request):
     cart = Cart(request)
     if len(cart) == 0:
@@ -80,11 +81,25 @@ def order_create(request):
             )
         cart.clear()
 
+    confirm_url = request.build_absolute_uri(reverse('cart:order_confirm', args=[order.token]))
     subject = f"Підтвердження замовлення #{order.id}"
-    context = {'order': order, 'items': order.items.all(), 'total': order.total_price}
-    message = render_to_string('cart/order_email.txt', context)
-    email_message = EmailMessage(subject, message, settings.DEFAULT_FROM_EMAIL, [order.email])
-    email_message.send(fail_silently=False)
+    message = f"""
+Дякуємо за ваше замовлення #{order.id}!
 
-    messages.success(request, "Дякуємо! Ваше замовлення прийнято. Ми надіслали підтвердження на пошту.")
+Щоб підтвердити замовлення, перейдіть за посиланням:
+{confirm_url}
+"""
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [order.email], fail_silently=False)
+
+    messages.success(request, "На вашу пошту надіслано посилання для підтвердження замовлення.")
+    return redirect('menu:category_list')
+
+def order_confirm(request, token):
+    order = get_object_or_404(Order, token=token)
+    if order.is_confirmed:
+        messages.info(request, "Замовлення вже підтверджене.")
+    else:
+        order.is_confirmed = True
+        order.save()
+        messages.success(request, "Дякуємо! Ваше замовлення підтверджено.")
     return redirect('menu:category_list')
