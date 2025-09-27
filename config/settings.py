@@ -125,9 +125,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-# внизу settings.py
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+
+CART_SESSION_ID = 'cart'
+DEFAULT_FROM_EMAIL = 'noreply@yourdomain.test'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
