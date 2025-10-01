@@ -51,8 +51,8 @@
 
       <p><b>Інгредієнти:</b> {{ dish.ingredients }}</p>
 
-      {% if dish.in_stock %}
-        <p class="text-success">✅ В наявності ({{ dish.stock }})</p>
+      {% if dish.available %}
+        <p class="text-success">✅ В наявності</p>
       {% else %}
         <p class="text-danger">❌ Немає в наявності</p>
       {% endif %}

@@ -16,11 +16,6 @@ class Dish(models.Model):
     image = models.ImageField(upload_to="dishes/", blank=True, null=True)
     price = models.FloatField(default=100.00)
     available = models.BooleanField(default=True)
-    stock = models.PositiveIntegerField(default=1)
-
-    @property
-    def in_stock(self):
-        return self.stock > 0
 
     def __str__(self):
         return f"{self.name} - {self.price} грн"

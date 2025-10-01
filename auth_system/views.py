@@ -39,10 +39,9 @@ def user_login(request):
 
 def logout_view(request):
     logout(request)
-    return redirect("register:login")
+    return redirect("register:home_auth")
 
 
-@login_required
 def profile_view(request):
     return render(request, "auth_system/profile.html", {"user": request.user})
 
