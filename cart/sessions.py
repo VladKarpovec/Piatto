@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django.conf import settings
-from .models import Dish
+from menu.models import Dish
 
 
 class Cart:
