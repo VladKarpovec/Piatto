@@ -43,11 +43,7 @@
                 <h4>Загальна сума: {{ total }} грн</h4>
                 <div>
                     <button type="submit" class="btn btn-primary me-2">Оновити кошик</button>
-                    <form method="post" action="{% url 'cart:order_create' %}" class="d-inline">
-                        {% csrf_token %}
-                        {% if not request.user.is_authenticated %}
-                            <input type="email" name="email" placeholder="Введіть email" class="form-control d-inline-block me-2" style="width: 250px;" required>
-                        {% endif %}
+                    <form method="post" action="{% url 'cart:proceed_to_order' %}" class="d-inline">
                         <button type="submit" class="btn btn-success">Оформити замовлення</button>
                     </form>
                 </div>
