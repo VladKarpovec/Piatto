@@ -99,3 +99,10 @@ def order_confirm(request, token):
         messages.success(request, "Дякуємо! Ваше замовлення підтверджено.")
 
     return redirect('menu:category_list')
+
+
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'orders/order_history.html', {'orders': orders})
+
+
