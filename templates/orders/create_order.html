@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Оформлення замовлення{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3">Оформлення замовлення</h2>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6">
+        {{ form.as_p }}
+      </div>
+
+      <div class="col-md-6">
+        <h5>Ваше замовлення:</h5>
+        <ul class="list-group mb-3">
+          {% for item in cart %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ item.dish.name }} (x{{ item.quantity }})
+            <span>{{ item.total_price }} грн</span>
+          </li>
+          {% endfor %}
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Разом:</strong> <strong>{{ total }} грн</strong>
+          </li>
+        </ul>
+
+        <button type="submit" class="btn btn-primary w-100">Підтвердити замовлення</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

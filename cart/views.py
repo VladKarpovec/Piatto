@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 
 from django.conf import settings
 
-from .models import Dish, Order, OrderItem
+from orders.models import Dish, Order, OrderItem
 from .sessions import Cart
 
 @require_POST
@@ -60,4 +60,4 @@ def proceed_to_order(request):
     if len(cart) == 0:
         messages.error(request, 'Cart doesnt have anything')
         return redirect('menu:category_list')
-    return redirect('orders:create_order')
+    return redirect('orders:order_create')

@@ -1,4 +1,4 @@
-from django.contrib import admin
+'''from django.contrib import admin
 from .models import Order, OrderItem
 
 
@@ -27,4 +27,4 @@ class OrderItemAdmin(admin.ModelAdmin):
     list_display = ("order", "dish", "quantity", "price", "total_price")
 
     def total_price(self, obj):
-        return obj.total_price
+        return obj.total_price'''
