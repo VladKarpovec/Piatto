@@ -14,6 +14,12 @@
         {% if not dish.in_stock %}
           <span class="text-danger">(немає в наявності)</span>
         {% endif %}
+
+        {% if dish.avg_rating %}
+          ⭐ {{ dish.avg_rating|floatformat:1 }} ({{ dish.review_count }})
+        {% else %}
+          ⭐ Немає оцінок
+        {% endif %}
       </li>
     {% empty %}
       <li>Немає страв у цій категорії.</li>

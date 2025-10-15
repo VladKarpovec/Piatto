@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Відгук до {{ dish.name }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  {% form.as_p %}
+  <button type="submit" class="btn btn-primary">Надіслати </button>
+</form>
+{% endblock %}

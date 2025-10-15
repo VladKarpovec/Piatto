@@ -58,4 +58,44 @@
       {% endif %}
     </div>
   </div>
+<hr>
+<h3>Відгуки</h3>
+
+{% if reviews %}
+  <ul>
+    {% for review in reviews %}
+      <li style="margin-bottom: 10px;">
+        <strong>{{ review.user.username }}</strong>
+        ⭐ {{ review.rating }}/5 <br>
+        {{ review.comment }} <br>
+        <small>{{ review.created_at|date:"d.m.Y H:i" }}</small>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Поки немає відгуків. Будь першим!</p>
+{% endif %}
+
+<hr>
+{% if user.is_authenticated %}
+  <h4>{% if user_review %}Оновити свій відгук{% else %}Залишити відгук{% endif %}</h4>
+
+  <form method="post" action="{% url 'reviews:add_review' dish.id %}">
+    {% csrf_token %}
+    <label for="rating">Оцінка:</label>
+    <select name="rating" id="rating">
+      {% for i in "12345" %}
+        <option value="{{ i }}" {% if user_review and user_review.rating == i|add:"0" %}selected{% endif %}>{{ i }}</option>
+      {% endfor %}
+    </select><br>
+
+    <label for="comment">Коментар:</label><br>
+    <textarea name="comment" id="comment" rows="4" cols="50">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea><br>
+
+    <button type="submit">{% if user_review %}Оновити{% else %}Надіслати{% endif %}</button>
+  </form>
+{% else %}
+  <p><a href="{% url 'register:login' %}">Увійдіть</a>, щоб залишити відгук.</p>
+{% endif %}
+
 {% endblock %}
