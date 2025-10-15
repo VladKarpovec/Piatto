@@ -10,6 +10,7 @@ class Review(models.Model):
     rating = models.PositiveIntegerField(default=5, choices=[(i, i) for i in range(1, 5)])
     comment = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     approved = models.BooleanField(default=False)
     is_approved = models.BooleanField(default=True)
 

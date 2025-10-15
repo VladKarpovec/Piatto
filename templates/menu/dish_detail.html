@@ -59,16 +59,30 @@
     </div>
   </div>
 <hr>
+
+<hr>
 <h3>Відгуки</h3>
 
 {% if reviews %}
   <ul>
     {% for review in reviews %}
-      <li style="margin-bottom: 10px;">
+      <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
         <strong>{{ review.user.username }}</strong>
         ⭐ {{ review.rating }}/5 <br>
         {{ review.comment }} <br>
-        <small>{{ review.created_at|date:"d.m.Y H:i" }}</small>
+        <small>
+          Створено: {{ review.created_at|date:"d.m.Y H:i" }}
+          {% if review.updated_at != review.created_at %}
+            (оновлено: {{ review.updated_at|date:"d.m.Y H:i" }})
+          {% endif %}
+        </small>
+
+        {% if user.is_staff %}
+          <form method="post" action="{% url 'reviews:delete_review' review.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
+          </form>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
@@ -77,6 +91,7 @@
 {% endif %}
 
 <hr>
+
 {% if user.is_authenticated %}
   <h4>{% if user_review %}Оновити свій відгук{% else %}Залишити відгук{% endif %}</h4>
 
@@ -97,5 +112,7 @@
 {% else %}
   <p><a href="{% url 'register:login' %}">Увійдіть</a>, щоб залишити відгук.</p>
 {% endif %}
+
+
 
 {% endblock %}

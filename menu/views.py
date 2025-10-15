@@ -20,7 +20,7 @@ def category_detail(request, id):
 
 def dish_detail(request, id):
     dish = get_object_or_404(Dish, id=id)
-    reviews = Review.objects.filter(dish=dish, is_approved=True)
+    reviews = dish.reviews.order_by('-updated_at')
 
     user_review = None
     if request.user.is_authenticated:
