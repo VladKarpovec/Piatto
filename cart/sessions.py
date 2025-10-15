@@ -26,7 +26,6 @@ class Cart:
         else:
             self.cart[dish_id]['quantity'] += int(quantity)
 
-        # завжди оновлюємо ціну (на випадок зміни ціни в моделі)
         self.cart[dish_id]['price'] = str(dish.price)
         self.save()
 
@@ -48,7 +47,6 @@ class Cart:
         dish_ids = list(self.cart.keys())
         if not dish_ids:
             return
-        # перетворюємо на int для фільтрації
         int_ids = [int(i) for i in dish_ids]
         dishes = Dish.objects.filter(id__in=int_ids)
         cart_copy = self.cart.copy()

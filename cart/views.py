@@ -18,7 +18,6 @@ def add_to_cart(request, id):
     cart = Cart(request)
     cart.add(dish=dish, quantity=quantity, update_quantity=False)
 
-    # Повертаємо JSON для AJAX, або редірект для звичайного запиту
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({
             'success': True,
