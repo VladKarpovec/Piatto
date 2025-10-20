@@ -1,166 +1,83 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Piatto – {% block title %}Головна{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Piatto{% endblock %}</title>
 
-  <!-- Bootstrap 5 -->
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Іконки -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
-  <style>
-    /* ───── Загальні стилі ───── */
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: url('/static/img/wood-texture-light.jpg') center/cover no-repeat,
-                  linear-gradient(135deg, #f5f1ee, #e9e5df);
-      color: #3e3a39;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    main {
-      flex: 1 0 auto;
-      animation: fadeIn 0.8s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ───── Хедер / Навігація ───── */
-    header {
-      background: rgba(255,255,255,0.9);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      backdrop-filter: blur(4px);
-    }
-    .navbar-brand {
-      font-family: 'Lora', serif;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: #b63e2d !important;
-    }
-    .nav-link {
-      font-weight: 500;
-      color: #3e3a39 !important;
-      position: relative;
-      transition: color .3s;
-    }
-    .nav-link::after {
-      content: "";
-      position: absolute;
-      bottom: -3px; left: 0;
-      width: 0; height: 2px;
-      background: #b63e2d;
-      transition: width .3s;
-      border-radius: 1px;
-    }
-    .nav-link:hover {
-      color: #b63e2d !important;
-    }
-    .nav-link:hover::after {
-      width: 100%;
-    }
-    .btn-reserve {
-      background: linear-gradient(45deg, #b63e2d, #9e3424);
-      color: #fff;
-      font-weight: 600;
-      border: none;
-      border-radius: .5rem;
-      padding: .5rem 1rem;
-      transition: transform .3s, box-shadow .3s;
-    }
-    .btn-reserve:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-    }
-
-    /* ───── Футер ───── */
-    footer {
-      background: #3e3a39;
-      color: #f5f1ee;
-      text-align: center;
-      padding: 1.5rem 0;
-      font-size: .9rem;
-      flex-shrink: 0;
-    }
-    footer a {
-      color: #b63e2d;
-      text-decoration: none;
-      margin: 0 .5rem;
-    }
-    footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
-
-  {% block extra_css %}{% endblock %}
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
-  <!-- Хедер -->
-  <header class="shadow-sm">
-    <nav class="navbar navbar-expand-lg container">
-      <a class="navbar-brand" href="#">Piatto</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-              data-bs-target="#navbarNav" aria-controls="navbarNav"
-              aria-expanded="false" aria-label="Toggle navigation">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark shadow-sm py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-3" href="{% url 'home:home' %}">
+        🍽️ Piatto
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center">
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'home:home' %}">Головна</a>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="{% url 'menu:category_list' %}">Меню</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart:cart_detail' %}">Кошик</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'orders:order_history' %}">Замовлення</a></li>
+        </ul>
+
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+              {{ user.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li><a class="dropdown-item" href="{% url 'register:profile' %}">Профіль</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <form method="post" action="{% url 'register:logout' %}">
+                  {% csrf_token %}
+                  <button type="submit" class="dropdown-item">Вийти</button>
+                </form>
+              </li>
+            </ul>
+          </li>
+          {% else %}
+          <li class="nav-item me-2">
+            <a href="{% url 'auth_system:login' %}" class="btn btn-outline-light px-3">Увійти</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'menu:category_list' %}">Меню</a>
+            <a href="{% url 'auth_system:register' %}" class="btn btn-gold px-3">Реєстрація</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'register:profile' %}">Профіль</a>
-          </li>
-          <li class="nav-item">
-             <a class="nav-link" href="{% url 'cart:cart_detail' %}">Кошик</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'orders:order_history' %}">Історія замовлень</a>
-          </li>
+          {% endif %}
         </ul>
       </div>
-    </nav>
-  </header>
+    </div>
+  </nav>
 
-  <!-- Основний контент -->
-  <main class="container my-4">
+  <!-- Main -->
+  <main class="flex-grow-1">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- Футер -->
-  <footer>
+  <!-- Footer -->
+  <footer class="footer text-center py-4 mt-auto">
     <div class="container">
-      <p class="mb-1">&copy; {{ now.year }} Piatto. Всі права захищені.</p>
-      <p class="mb-0">
-        <a href="tel:+380123456789"><i class="bi bi-telephone-fill"></i> +38 (012) 345-67-89</a> |
-        <a href="mailto:info@piatto.ua"><i class="bi bi-envelope-fill"></i> info@piatto.ua</a>
-      </p>
-      <p class="mt-2">
-        <a href="#"><i class="bi bi-facebook"></i></a>
-        <a href="#"><i class="bi bi-instagram"></i></a>
-        <a href="#"><i class="bi bi-yelp"></i></a>
+      <p class="mb-0 text-light">
+        &copy; 2025 <b>Piatto</b> — елегантна кухня для ваших моментів 🍷
       </p>
     </div>
   </footer>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  {% block extra_js %}{% endblock %}
-
 </body>
 </html>

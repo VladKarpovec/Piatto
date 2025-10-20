@@ -2,117 +2,83 @@
 
 {% block title %}{{ dish.name }}{% endblock %}
 
-{% block extra_css %}
-  {{ block.super }}
-  <style>
-    /* Контейнер фіксованого розміру з пропорційним зменшенням зображення */
-    .img-frame {
-      width: 400px;
-      height: 300px;
-      background: #f5f1ee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      border-radius: .5rem;
-    }
-    .img-frame img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
-<form method="post" action="{% url 'cart:add_to_cart' dish.id %}">
-  {% csrf_token %}
-  <div class="mb-3">
-    <label for="quantity" class="form-label">Кількість</label>
-    <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control" style="width: 100px;">
-  </div>
-  <button type="submit" class="btn btn-success btn-reserve">Додати до кошика</button>
-</form>
-
-  <div class="row my-4">
+<div class="container my-5">
+  <div class="row g-4">
     <div class="col-md-6">
-      <h1>{{ dish.name }}</h1>
-      <p>{{ dish.description }}</p>
-      <p><b>Ціна:</b> {{ dish.price }} грн</p>
-
       {% if dish.image %}
-        <div class="img-frame shadow-sm mb-3">
-          <img
-            src="{{ dish.image.url }}"
-            alt="{{ dish.name }}"
-          >
-        </div>
+      <div class="img-frame shadow-sm mb-3">
+        <img src="{{ dish.image.url }}" alt="{{ dish.name }}">
+      </div>
       {% endif %}
 
+      <h1 class="fw-bold">{{ dish.name }}</h1>
+      <p class="lead">{{ dish.description }}</p>
+      <p><b>Ціна:</b> {{ dish.price }} грн</p>
       <p><b>Інгредієнти:</b> {{ dish.ingredients }}</p>
 
       {% if dish.available %}
-        <p class="text-success">✅ В наявності</p>
+        <p class="text-success fw-semibold">✅ В наявності</p>
       {% else %}
-        <p class="text-danger">❌ Немає в наявності</p>
+        <p class="text-danger fw-semibold">❌ Немає в наявності</p>
+      {% endif %}
+
+      <form method="post" action="{% url 'cart:add_to_cart' dish.id %}" class="d-flex gap-2 mt-3">
+        {% csrf_token %}
+        <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control" style="width: 100px;">
+        <button type="submit" class="btn btn-success">Додати до кошика</button>
+      </form>
+    </div>
+
+    <div class="col-md-6">
+      <h3>Відгуки</h3>
+      {% if reviews %}
+        <ul class="list-group mb-3">
+          {% for review in reviews %}
+          <li class="list-group-item">
+            <strong>{{ review.user.username }}</strong> ⭐ {{ review.rating }}/5
+            <p>{{ review.comment }}</p>
+            <small>
+              Створено: {{ review.created_at|date:"d.m.Y H:i" }}
+              {% if review.updated_at != review.created_at %}
+                (оновлено: {{ review.updated_at|date:"d.m.Y H:i" }})
+              {% endif %}
+            </small>
+            {% if user.is_staff %}
+            <form method="post" action="{% url 'reviews:delete_review' review.id %}" class="mt-1">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
+            </form>
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Поки немає відгуків. Будь першим!</p>
+      {% endif %}
+
+      {% if user.is_authenticated %}
+      <h4 class="mt-4">{% if user_review %}Оновити свій відгук{% else %}Залишити відгук{% endif %}</h4>
+      <form method="post" action="{% url 'reviews:add_review' dish.id %}">
+        {% csrf_token %}
+        <div class="mb-2">
+          <label for="rating" class="form-label">Оцінка:</label>
+          <select name="rating" id="rating" class="form-select w-auto">
+            {% for i in "12345" %}
+            <option value="{{ i }}" {% if user_review and user_review.rating == i|add:"0" %}selected{% endif %}>{{ i }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-2">
+          <label for="comment" class="form-label">Коментар:</label>
+          <textarea name="comment" id="comment" rows="4" class="form-control">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">{% if user_review %}Оновити{% else %}Надіслати{% endif %}</button>
+      </form>
+      {% else %}
+      <p><a href="{% url 'auth_system:login' %}">Увійдіть</a>, щоб залишити відгук.</p>
       {% endif %}
     </div>
   </div>
-<hr>
-
-<hr>
-<h3>Відгуки</h3>
-
-{% if reviews %}
-  <ul>
-    {% for review in reviews %}
-      <li style="margin-bottom: 10px; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-        <strong>{{ review.user.username }}</strong>
-        ⭐ {{ review.rating }}/5 <br>
-        {{ review.comment }} <br>
-        <small>
-          Створено: {{ review.created_at|date:"d.m.Y H:i" }}
-          {% if review.updated_at != review.created_at %}
-            (оновлено: {{ review.updated_at|date:"d.m.Y H:i" }})
-          {% endif %}
-        </small>
-
-        {% if user.is_staff %}
-          <form method="post" action="{% url 'reviews:delete_review' review.id %}" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-sm btn-danger">Видалити</button>
-          </form>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>Поки немає відгуків. Будь першим!</p>
-{% endif %}
-
-<hr>
-
-{% if user.is_authenticated %}
-  <h4>{% if user_review %}Оновити свій відгук{% else %}Залишити відгук{% endif %}</h4>
-
-  <form method="post" action="{% url 'reviews:add_review' dish.id %}">
-    {% csrf_token %}
-    <label for="rating">Оцінка:</label>
-    <select name="rating" id="rating">
-      {% for i in "12345" %}
-        <option value="{{ i }}" {% if user_review and user_review.rating == i|add:"0" %}selected{% endif %}>{{ i }}</option>
-      {% endfor %}
-    </select><br>
-
-    <label for="comment">Коментар:</label><br>
-    <textarea name="comment" id="comment" rows="4" cols="50">{% if user_review %}{{ user_review.comment }}{% endif %}</textarea><br>
-
-    <button type="submit">{% if user_review %}Оновити{% else %}Надіслати{% endif %}</button>
-  </form>
-{% else %}
-  <p><a href="{% url 'register:login' %}">Увійдіть</a>, щоб залишити відгук.</p>
-{% endif %}
-
-
-
+</div>
 {% endblock %}

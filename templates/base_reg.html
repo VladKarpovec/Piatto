@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -16,14 +17,20 @@
     rel="stylesheet"
   >
 
+  <!-- 🔹 Підключення глобального стилю (з головного сайту) -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
   <style>
     /* ───── Body ───── */
     body {
       margin: 0;
       padding: 0;
-      background: #f5f1ee url('/static/img/wood-texture-light.jpg') center/cover no-repeat;
+      background: linear-gradient(120deg, #f5f7fa, #c3cfe2);
       font-family: 'Montserrat', sans-serif;
-      color: #3e3a39;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
     /* ───── Логотип та назва ───── */
@@ -42,7 +49,7 @@
       font-size: 2rem;
       font-weight: 700;
       margin: 0;
-      color: #3e3a39;
+      color: #212529;
     }
 
     /* ───── Карточка авторизації / реєстрації ───── */
@@ -50,15 +57,11 @@
       max-width: 480px;
       margin: 0 auto 4rem;
       padding: 2.5rem 2rem;
-      background: rgba(255,255,255,0.95);
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
-      backdrop-filter: blur(4px);
-      animation: slideIn 0.5s ease-out both;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      background: rgba(255,255,255,0.9);
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(6px);
+      animation: fadeInUp 0.4s ease;
     }
 
     .auth-card h2 {
@@ -66,14 +69,14 @@
       font-size: 1.75rem;
       font-weight: 700;
       text-align: center;
-      color: #3e3a39;
+      color: #212529;
       margin-bottom: 1.5rem;
     }
 
     /* ───── Поля форми ───── */
     .auth-card label {
       font-weight: 500;
-      color: #5a5049;
+      color: #444;
     }
     .auth-card input,
     .auth-card select,
@@ -82,9 +85,9 @@
       padding: 0.75rem 1rem;
       font-family: 'Montserrat', sans-serif;
       font-size: 1rem;
-      color: #3e3a39;
+      color: #333;
       background: #ffffff;
-      border: 1px solid #c8bfb7;
+      border: 1px solid #c8cfd7;
       border-radius: 0.5rem;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
@@ -92,12 +95,13 @@
     .auth-card select:focus,
     .auth-card textarea:focus {
       outline: none;
-      border-color: #b63e2d;
-      box-shadow: 0 0 0 0.2rem rgba(182,62,45,0.25);
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 0.2rem rgba(74,144,226,0.25);
     }
+
     .auth-card .form-text {
       font-size: 0.875rem;
-      color: #7d736c;
+      color: #6c757d;
       margin-top: 0.25rem;
     }
 
@@ -106,23 +110,25 @@
       width: 100%;
       padding: 0.75rem;
       font-weight: 600;
-      background-color: #b63e2d;
+      background-color: #4a90e2;
       color: #ffffff;
       border: none;
-      border-radius: 0.5rem;
-      transition: background-color 0.3s;
+      border-radius: 0.75rem;
+      transition: background-color 0.3s, transform 0.2s;
     }
     .btn-main:hover {
-      background-color: #9e3424;
+      background-color: #357ABD;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     /* ───── Футер ───── */
     footer {
       text-align: center;
       font-size: 0.875rem;
-      color: #7d736c;
+      color: #6c757d;
       padding: 2rem 0;
-      margin-top: 2rem;
+      margin-top: auto;
     }
   </style>
 </head>
@@ -130,7 +136,7 @@
 
   <div class="container">
     <div class="auth-header">
-      <img src="/static/img/logo.svg" alt="Piatto Logo">
+      <img src="{% static 'img/logo.svg' %}" alt="Piatto Logo">
       <h1>Piatto</h1>
     </div>
 
@@ -138,6 +144,10 @@
       {% block content %}{% endblock %}
     </div>
   </div>
+
+  <footer>
+    &copy; 2025 <b>Piatto</b> — елегантна кухня для ваших моментів 🍷
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

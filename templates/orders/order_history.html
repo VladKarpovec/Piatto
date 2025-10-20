@@ -1,55 +1,66 @@
 {% extends "base.html" %}
 {% block title %}Історія замовлень{% endblock %}
+
 {% block content %}
 <div class="container my-5">
-    <h2 class="mb-4">Мої замовлення</h2>
+  <h2 class="section-title mb-4">Мої замовлення</h2>
 
-    {% if orders %}
-        <table class="table table-bordered text-center align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Дата</th>
-                    <th>Статус</th>
-                    <th>Сума</th>
-                    <th>Страви</th>
-                    <th>Дії</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for order in orders %}
-                    <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
-                        <td>
-                            {% if order.is_confirmed %}
-                                Підтверджено
-                            {% else %}
-                                Очікує підтвердження
-                            {% endif %}
-                        </td>
-
-                        <td>{{ order.total_price }} грн</td>
-                        <td>
-                            <ul class="list-unstyled mb-0">
-                                {% for item in order.items.all %}
-                                    <li>{{ item.dish.name }} (x{{ item.quantity }})</li>
-                                {% endfor %}
-                            </ul>
-                        </td>
-                        <td>
-                          <form method="post" action="{% url 'orders:repeat_order' order.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-outline-primary">Повторити</button>
-                          </form>
-                        </td>
-
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>У вас ще немає замовлень.</p>
-    {% endif %}
+  {% if orders %}
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-bordered table-hover align-middle text-center mb-0 bg-white">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Дата</th>
+          <th>Статус</th>
+          <th>Сума</th>
+          <th>Страви</th>
+          <th>Дії</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr>
+          <td>{{ order.id }}</td>
+          <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+          <td>
+            {% if order.is_confirmed %}
+            <span class="badge bg-success">Підтверджено</span>
+            {% else %}
+            <span class="badge bg-warning text-dark">Очікує</span>
+            {% endif %}
+          </td>
+          <td>{{ order.total_price }} грн</td>
+          <td>
+            <ul class="list-unstyled mb-0">
+              {% for item in order.items.all %}
+              <li>{{ item.dish.name }} (x{{ item.quantity }})</li>
+              {% endfor %}
+            </ul>
+          </td>
+          <td>
+            <form method="post" action="{% url 'orders:repeat_order' order.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-primary btn-sm">Повторити</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-center py-5">У вас ще немає замовлень.</p>
+  {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.section-title { font-size: 2rem; font-weight: 600; }
+.table { border-radius: 0.75rem; overflow: hidden; }
+.table-hover tbody tr:hover { background-color: #f8f9fa; }
+.badge { font-size: 0.9rem; }
+.btn-sm { padding: 0.25rem 0.5rem; }
+</style>
 {% endblock %}

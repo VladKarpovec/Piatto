@@ -3,15 +3,49 @@
 {% block title %}Редагування профілю{% endblock %}
 
 {% block content %}
-  <div class="edit-card mx-auto">
-    <h2 class="mb-4 text-center">✏️ Редагування профілю</h2>
+<div class="container my-5" style="max-width:600px;">
+  <div class="edit-card mx-auto p-4 shadow-sm rounded bg-white" style="box-sizing:border-box; overflow-wrap: break-word;">
+    <h2 class="mb-4 text-center section-title">✏️ Редагування профілю</h2>
+
     <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
+
+      <!-- Дані користувача -->
       <h4 class="mb-3">👤 Дані користувача</h4>
-      {{ user_form.as_p }}
-      <h4 class="mb-3">📄 Профіль</h4>
-      {{ profile_form.as_p }}
-      <button type="submit" class="btn btn-success w-100 mt-3">💾 Зберегти</button>
+      <div style="line-height:1.6;">
+        {% for field in user_form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- Дані профілю -->
+      <h4 class="mb-3 mt-4">📄 Профіль</h4>
+      <div style="line-height:1.6;">
+        {% for field in profile_form %}
+          <div class="mb-3">
+            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+              <div class="text-danger small">{{ error }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">💾 Зберегти зміни</button>
     </form>
   </div>
+</div>
 {% endblock %}
