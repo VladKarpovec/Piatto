@@ -110,3 +110,10 @@ def repeat_order(request, order_id):
     request.session.modified = True
     messages.info(request, f"Замовлення №{order.id} додано до кошика.")
     return redirect('orders:order_create')
+
+
+@require_POST
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user, is_confirmed=False)
+    order.delete()
+    return redirect('orders:order_history')

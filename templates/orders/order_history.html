@@ -3,14 +3,17 @@
 
 {% block content %}
 <div class="container my-5">
-  <h2 class="section-title mb-4">Мої замовлення</h2>
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-dark mb-2">🍽️ Мої замовлення</h2>
+    <p class="text-muted">Перегляньте історію ваших замовлень у Piatto</p>
+  </div>
 
   {% if orders %}
-  <div class="table-responsive shadow-sm rounded">
-    <table class="table table-bordered table-hover align-middle text-center mb-0 bg-white">
-      <thead class="table-light">
+  <div class="table-responsive shadow rounded-4 overflow-hidden">
+    <table class="table align-middle text-center mb-0 bg-white">
+      <thead class="bg-light text-uppercase text-secondary small">
         <tr>
-          <th>ID</th>
+          <th class="py-3">№</th>
           <th>Дата</th>
           <th>Статус</th>
           <th>Сума</th>
@@ -20,29 +23,40 @@
       </thead>
       <tbody>
         {% for order in orders %}
-        <tr>
-          <td>{{ order.id }}</td>
+        <tr class="order-row">
+          <td class="fw-semibold text-dark">{{ order.id }}</td>
           <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
           <td>
             {% if order.is_confirmed %}
-            <span class="badge bg-success">Підтверджено</span>
+              <span class="badge rounded-pill bg-success px-3 py-2 shadow-sm">Підтверджено</span>
             {% else %}
-            <span class="badge bg-warning text-dark">Очікує</span>
+              <span class="badge rounded-pill bg-warning text-dark px-3 py-2 shadow-sm">Очікує</span>
             {% endif %}
           </td>
-          <td>{{ order.total_price }} грн</td>
+          <td class="fw-bold text-success">{{ order.total_price }} грн</td>
           <td>
-            <ul class="list-unstyled mb-0">
+            <ul class="list-unstyled small mb-0 text-start">
               {% for item in order.items.all %}
-              <li>{{ item.dish.name }} (x{{ item.quantity }})</li>
+                <li>• {{ item.dish.name }} <span class="text-muted">(x{{ item.quantity }})</span></li>
               {% endfor %}
             </ul>
           </td>
           <td>
-            <form method="post" action="{% url 'orders:repeat_order' order.id %}">
+            <form method="post" action="{% url 'orders:repeat_order' order.id %}" class="d-inline">
               {% csrf_token %}
-              <button type="submit" class="btn btn-outline-primary btn-sm">Повторити</button>
+              <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                🔁 Повторити
+              </button>
             </form>
+
+            {% if not order.is_confirmed %}
+            <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="d-inline" onsubmit="return confirm('Ви точно хочете відмовитись від цього замовлення?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                ❌ Відмовитись
+              </button>
+            </form>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}
@@ -50,17 +64,32 @@
     </table>
   </div>
   {% else %}
-  <p class="text-center py-5">У вас ще немає замовлень.</p>
+  <div class="text-center py-5">
+    <h5 class="text-muted mb-3">У вас ще немає замовлень 🍕</h5>
+    <a href="{% url 'menu:menu' %}" class="btn btn-lg btn-primary rounded-pill shadow-sm">
+      Переглянути меню
+    </a>
+  </div>
   {% endif %}
 </div>
 {% endblock %}
 
 {% block extra_css %}
 <style>
-.section-title { font-size: 2rem; font-weight: 600; }
-.table { border-radius: 0.75rem; overflow: hidden; }
-.table-hover tbody tr:hover { background-color: #f8f9fa; }
-.badge { font-size: 0.9rem; }
-.btn-sm { padding: 0.25rem 0.5rem; }
+  .section-title { font-size: 2rem; font-weight: 600; }
+  .table { border-radius: 0.75rem; overflow: hidden; }
+  .table tbody tr:hover {
+    background-color: #f8f9fa;
+    transition: 0.2s ease-in-out;
+  }
+  .order-row td {
+    vertical-align: middle;
+  }
+  .btn-sm {
+    transition: all 0.2s ease-in-out;
+  }
+  .btn-sm:hover {
+    transform: scale(1.05);
+  }
 </style>
 {% endblock %}

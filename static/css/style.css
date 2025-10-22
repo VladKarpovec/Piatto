@@ -1,0 +1,197 @@
+/* === Глобальні стилі === */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(120deg, #f5f7fa, #c3cfe2);
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Навігація */
+.navbar {
+    background: #212529 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.nav-link {
+    transition: 0.3s;
+}
+.nav-link:hover {
+    color: #ffc107 !important;
+    transform: scale(1.05);
+}
+
+/* Контент */
+main {
+    flex: 1;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+/* Карточки */
+.card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    border-radius: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+    font-weight: 600;
+    color: #212529;
+}
+
+/* Зображення страв */
+.card-img-top,
+.img-frame img {
+    border-radius: 0.75rem 0.75rem 0 0;
+    object-fit: cover;
+    width: 100%;
+}
+
+.img-frame img {
+    border-radius: 1rem;
+    max-height: 400px;
+}
+
+/* Кнопки */
+.btn {
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Основні кольори */
+.btn-primary {
+    background-color: #4a90e2;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #357ABD;
+}
+.btn-success {
+    background-color: #28a745;
+}
+.btn-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+.btn-outline-primary:hover {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+/* Таблиці */
+.table {
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+.table th, .table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Заголовки */
+.section-title, h2, h1 {
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 1rem;
+}
+
+/* Категорії та hover ефекти */
+.hover-scale,
+.hover-scale-category,
+.hover-scale-card {
+    transition: all 0.3s ease;
+}
+
+.hover-scale:hover,
+.hover-scale-category:hover,
+.hover-scale-card:hover {
+    transform: scale(1.05);
+}
+
+/* Футер */
+footer {
+    background: #212529;
+    color: #ccc;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto;
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Форма */
+form {
+    margin-bottom: 0;
+}
+
+input, select, textarea {
+    border-radius: 0.5rem !important;
+}
+
+/* Відгуки */
+.list-group-item {
+    border-radius: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+.list-group-item strong {
+    color: #4a90e2;
+}
+
+.badge {
+    font-size: 0.9rem;
+    padding: 0.4em 0.6em;
+}
+
+/* Хелперні стилі */
+.text-success {
+    color: #28a745 !important;
+}
+.text-danger {
+    color: #dc3545 !important;
+}
+.text-warning {
+    color: #ffc107 !important;
+}
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Ефекти для форм */
+.form-control:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+/* Анімації */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container, .card, .table, .form-control {
+    animation: fadeInUp 0.4s ease;
+}

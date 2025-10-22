@@ -8,4 +8,5 @@ urlpatterns = [
     path("order/confirm/<uuid:token>/", views.order_confirm, name="order_confirm"),
     path("history/", views.order_history, name="order_history"),
     path("repeat/<int:order_id>/", views.repeat_order, name="repeat_order"),
+    path("cancel_order/<int:order_id>/", views.cancel_order, name="cancel_order")
 ]
