@@ -8,75 +8,75 @@
     <p class="text-muted">Перегляньте історію ваших замовлень у Piatto</p>
   </div>
 
-  {% if orders %}
-  <div class="table-responsive shadow rounded-4 overflow-hidden">
-    <table class="table align-middle text-center mb-0 bg-white">
-      <thead class="bg-light text-uppercase text-secondary small">
-        <tr>
-          <th class="py-3">№</th>
-          <th>Дата</th>
-          <th>Статус</th>
-          <th>Сума</th>
-          <th>Страви</th>
-          <th>Дії</th>
-        </tr>
-      </thead>
-      <tbody>
-      {% if not user.is_authenticated %}
-  <div class="text-center py-5">
-    <h5 class="text-muted mb-3">Щоб переглянути історію замовлень, увійдіть у свій акаунт</h5>
-    <a href="{% url 'register:login' %}" class="btn btn-lg btn-primary rounded-pill shadow-sm">
-      🔐 Увійти
-    </a>
-  </div>
-        {% for order in orders %}
-        <tr class="order-row">
-          <td class="fw-semibold text-dark">{{ order.id }}</td>
-          <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
-          <td>
-            {% if order.is_confirmed %}
-              <span class="badge rounded-pill bg-success px-3 py-2 shadow-sm">Підтверджено</span>
-            {% else %}
-              <span class="badge rounded-pill bg-warning text-dark px-3 py-2 shadow-sm">Очікує</span>
-            {% endif %}
-          </td>
-          <td class="fw-bold text-success">{{ order.total_price }} грн</td>
-          <td>
-            <ul class="list-unstyled small mb-0 text-start">
-              {% for item in order.items.all %}
-                <li>• {{ item.dish.name }} <span class="text-muted">(x{{ item.quantity }})</span></li>
-              {% endfor %}
-            </ul>
-          </td>
-          <td>
-            <form method="post" action="{% url 'orders:repeat_order' order.id %}" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                🔁 Повторити
-              </button>
-            </form>
+  {% if not user.is_authenticated %}
+    <div class="text-center py-5">
+      <h5 class="text-muted mb-3">Щоб переглянути історію замовлень, увійдіть у свій акаунт</h5>
+      <a href="{% url 'register:login' %}" class="btn btn-lg btn-primary rounded-pill shadow-sm">
+        🔐 Увійти
+      </a>
+    </div>
+  {% elif orders %}
+    <div class="table-responsive shadow rounded-4 overflow-hidden">
+      <table class="table align-middle text-center mb-0 bg-white">
+        <thead class="bg-light text-uppercase text-secondary small">
+          <tr>
+            <th class="py-3">№</th>
+            <th>Дата</th>
+            <th>Статус</th>
+            <th>Сума</th>
+            <th>Страви</th>
+            <th>Дії</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+          <tr class="order-row">
+            <td class="fw-semibold text-dark">{{ order.id }}</td>
+            <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
+            <td>
+              {% if order.is_confirmed %}
+                <span class="badge rounded-pill bg-success px-3 py-2 shadow-sm">Підтверджено</span>
+              {% else %}
+                <span class="badge rounded-pill bg-warning text-dark px-3 py-2 shadow-sm">Очікує</span>
+              {% endif %}
+            </td>
+            <td class="fw-bold text-success">{{ order.total_price }} грн</td>
+            <td>
+              <ul class="list-unstyled small mb-0 text-start">
+                {% for item in order.items.all %}
+                  <li>• {{ item.dish.name }} <span class="text-muted">(x{{ item.quantity }})</span></li>
+                {% endfor %}
+              </ul>
+            </td>
+            <td>
+              <form method="post" action="{% url 'orders:repeat_order' order.id %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                  🔁 Повторити
+                </button>
+              </form>
 
-            {% if not order.is_confirmed %}
-            <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="d-inline" onsubmit="return confirm('Ви точно хочете відмовитись від цього замовлення?')">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
-                ❌ Відмовитись
-              </button>
-            </form>
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+              {% if not order.is_confirmed %}
+              <form method="post" action="{% url 'orders:cancel_order' order.id %}" class="d-inline" onsubmit="return confirm('Ви точно хочете відмовитись від цього замовлення?')">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+                  ❌ Відмовитись
+                </button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   {% else %}
-  <div class="text-center py-5">
-    <h5 class="text-muted mb-3">У вас ще немає замовлень 🍕</h5>
-    <a href="{% url 'menu:menu' %}" class="btn btn-lg btn-primary rounded-pill shadow-sm">
-      Переглянути меню
-    </a>
-  </div>
+    <div class="text-center py-5">
+      <h5 class="text-muted mb-3">У вас ще немає замовлень 🍕</h5>
+      <a href="{% url 'menu:menu' %}" class="btn btn-lg btn-primary rounded-pill shadow-sm">
+        Переглянути меню
+      </a>
+    </div>
   {% endif %}
 </div>
 {% endblock %}

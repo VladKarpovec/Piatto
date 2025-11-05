@@ -1,5 +1,4 @@
 import uuid
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -8,7 +7,6 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.views.decorators.http import require_http_methods, require_POST
-from django.http import JsonResponse
 from cart.sessions import Cart
 from .models import Order, OrderItem
 from .forms import OrderCreateForm
@@ -56,15 +54,27 @@ def order_create(request):
 
                 confirm_url = request.build_absolute_uri(reverse('orders:order_confirm', args=[order.token]))
                 subject = f"Підтвердження замовлення #{order.id}"
-                message = f"Дякуємо, {order.name}!\nВаше замовлення #{order.id} створено.\n\n"
-                message += "Страви:\n"
+                message = (
+                    f"Дякуємо, {order.name}!\nВаше замовлення #{order.id} створено.\n\n"
+                    "Страви:\n"
+                )
                 for item in order.items.all():
                     message += f"- {item.dish.name} x{item.quantity} — {item.total_price} грн\n"
                 message += f"\nЗагальна сума: {order.total_price} грн\n\nДля підтвердження: {confirm_url}"
 
-                send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [order.email], fail_silently=False)
+                # --- Надсилання листа із захистом ---
+                try:
+                    send_mail(
+                        subject,
+                        message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [order.email],
+                        fail_silently=True,  # не зависає навіть якщо SMTP завис
+                    )
+                except Exception as e:
+                    print(f"Помилка при надсиланні листа: {e}")
 
-                messages.success(request, "Замовлення створено! Лист надіслано.")
+                messages.success(request, "Замовлення створено! (якщо пошта вказана — лист надіслано).")
                 return redirect('menu:category_list')
     else:
         form = OrderCreateForm(initial=initial_data)
@@ -85,16 +95,17 @@ def order_confirm(request, token):
     return redirect('menu:category_list')
 
 
-@login_required(login_url='login')
+@login_required(login_url='register:login')
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'orders/order_history.html', {'orders': orders})
+
 
 @require_POST
 def repeat_order(request, order_id):
     if not request.user.is_authenticated:
         messages.error(request, "Будь ласка, увійдіть, щоб повторити замовлення.")
-        return redirect('login')
+        return redirect('register:login')
 
     order = get_object_or_404(Order, id=order_id, user=request.user)
     cart = Cart(request)
