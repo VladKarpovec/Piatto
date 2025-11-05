@@ -1,4 +1,6 @@
 import uuid
+
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
@@ -83,10 +85,10 @@ def order_confirm(request, token):
     return redirect('menu:category_list')
 
 
+@login_required(login_url='login')
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'orders/order_history.html', {'orders': orders})
-
 
 @require_POST
 def repeat_order(request, order_id):
