@@ -85,6 +85,8 @@ CART_SESSION_ID = "cart"
 
 # =============== EMAIL через Resend ==================
 # SMTP не працює на Render, тому використовуємо API Resend
+
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Piatto <noreply@piatto.com>")
-EMAIL_BACKEND = "django.core.mail.backends.base.EmailBackend"
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+
