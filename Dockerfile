@@ -10,13 +10,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /app/
-
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app/
 
-RUN python manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput || true
+RUN mkdir -p /app/media
+
+VOLUME ["/app/media"]
 
 EXPOSE 8004
 
-ENTRYPOINT [ "gunicorn", "config.wsgi", "-b", "0.0.0.0:8004" ]
+ENTRYPOINT [ "gunicorn", "config.wsgi:application", "-b", "0.0.0.0:8004" ]
