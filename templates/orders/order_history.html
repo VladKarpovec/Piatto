@@ -22,15 +22,14 @@
         </tr>
       </thead>
       <tbody>
-        {% for order in orders %}
-        {% if not user.is_authenticated %}
+      {% if not user.is_authenticated %}
   <div class="text-center py-5">
     <h5 class="text-muted mb-3">Щоб переглянути історію замовлень, увійдіть у свій акаунт</h5>
     <a href="{% url 'register:login' %}" class="btn btn-lg btn-primary rounded-pill shadow-sm">
       🔐 Увійти
     </a>
   </div>
-{% else %}
+        {% for order in orders %}
         <tr class="order-row">
           <td class="fw-semibold text-dark">{{ order.id }}</td>
           <td>{{ order.created_at|date:"d.m.Y H:i" }}</td>
