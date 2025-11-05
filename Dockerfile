@@ -19,4 +19,4 @@ RUN python manage.py collectstatic --noinput
 
 EXPOSE 8004
 
-ENTRYPOINT [ "gunicorn", "Piatto.wsgi", "-b", "0.0.0.0:8004"]
+ENTRYPOINT [ "gunicorn", "config.wsgi", "-b", "0.0.0.0:8004" ]
