@@ -19,10 +19,11 @@ from django.conf.urls.static import static
 from django.urls import path, include
 
 from config import settings
+from home import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', include('home.urls', namespace="home")),
+    path("", views.home, name="home"),
     path('register/', include('auth_system.urls', namespace="register")),
     path('menu/', include('menu.urls', namespace="menu")),
     path('cart/', include('cart.urls', namespace="cart")),
