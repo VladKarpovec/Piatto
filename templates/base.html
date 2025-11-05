@@ -53,10 +53,10 @@
           </li>
           {% else %}
           <li class="nav-item me-2">
-            <a href="{% url 'auth_system:login' %}" class="btn btn-outline-light px-3">Увійти</a>
+            <a href="{% url 'register:login' %}" class="btn btn-outline-light px-3">Увійти</a>
           </li>
           <li class="nav-item">
-            <a href="{% url 'auth_system:register' %}" class="btn btn-gold px-3">Реєстрація</a>
+            <a href="{% url 'register:register' %}" class="btn btn-gold px-3">Реєстрація</a>
           </li>
           {% endif %}
         </ul>
