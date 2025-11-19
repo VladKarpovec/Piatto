@@ -23,18 +23,32 @@
     {% for dish in dishes %}
       <div class="col">
         <div class="card h-100 shadow-sm hover-scale-card border-0">
-          {% if dish.image and dish.image.url %}
+
+          {% if dish.image %}
+            <img src="{{ dish.image.url }}" class="card-img-top"
+                 alt="{{ dish.name }}"
+                 style="height:200px; object-fit:cover; border-top-left-radius:0.75rem; border-top-right-radius:0.75rem;">
+          {% else %}
+            <!-- Заглушка -->
+            <img src="/static/img/no-image.png" class="card-img-top"
+                 alt="Немає фото"
+                 style="height:200px; object-fit:cover; border-top-left-radius:0.75rem; border-top-right-radius:0.75rem;">
+          {% endif %}
 
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ dish.name }}</h5>
             <p class="card-text text-truncate">{{ dish.description }}</p>
+
             <p class="mb-1"><b>Ціна:</b> {{ dish.price }} грн</p>
+
             <p class="mb-2 text-warning">
               ⭐ {{ dish.average_rating }} / 5
               ({{ dish.reviews_count }} відгук{% if dish.reviews_count != 1 %}ів{% endif %})
             </p>
+
             <a href="{% url 'menu:dish_detail' dish.id %}" class="btn btn-primary mt-auto">Деталі</a>
           </div>
+
         </div>
       </div>
     {% empty %}
@@ -46,20 +60,17 @@
 
 {% block extra_css %}
 <style>
-/* Hover для категорій */
 .hover-scale-category:hover {
   transform: scale(1.05);
   transition: transform 0.3s ease;
 }
 
-/* Hover для карток страв */
 .hover-scale-card:hover {
   transform: translateY(-5px);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-/* Картки з округлими кутами */
 .card {
   border-radius: 0.75rem;
 }
