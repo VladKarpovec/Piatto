@@ -25,20 +25,20 @@
         <div class="card h-100 shadow-sm hover-scale-card border-0">
 
           {% if dish.image %}
-            <img src="{{ dish.image.url }}" class="card-img-top"
+            <img src="{{ dish.image.url }}"
                  alt="{{ dish.name }}"
+                 class="card-img-top"
                  style="height:200px; object-fit:cover; border-top-left-radius:0.75rem; border-top-right-radius:0.75rem;">
           {% else %}
-            <!-- Заглушка -->
-            <img src="/static/img/no-image.png" class="card-img-top"
-                 alt="Немає фото"
-                 style="height:200px; object-fit:cover; border-top-left-radius:0.75rem; border-top-right-radius:0.75rem;">
+            <div style="height:200px; background:#f3f3f3; border-top-left-radius:0.75rem; border-top-right-radius:0.75rem;"
+                 class="d-flex align-items-center justify-content-center text-muted">
+              <span>Без фото</span>
+            </div>
           {% endif %}
 
           <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ dish.name }}</h5>
             <p class="card-text text-truncate">{{ dish.description }}</p>
-
             <p class="mb-1"><b>Ціна:</b> {{ dish.price }} грн</p>
 
             <p class="mb-2 text-warning">
@@ -58,19 +58,18 @@
 </div>
 {% endblock %}
 
+
 {% block extra_css %}
 <style>
 .hover-scale-category:hover {
   transform: scale(1.05);
-  transition: transform 0.3s ease;
+  transition: transform .3s ease;
 }
-
 .hover-scale-card:hover {
   transform: translateY(-5px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: .3s;
   box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
-
 .card {
   border-radius: 0.75rem;
 }
@@ -79,4 +78,3 @@
 }
 </style>
 {% endblock %}
-
