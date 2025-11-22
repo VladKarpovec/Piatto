@@ -114,8 +114,8 @@ CART_SESSION_ID = "cart"
 
 # ==================== EMAIL через Resend ====================
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Piatto <noreply@piatto.com>")
-RESEND_FALLBACK_FROM = os.getenv("RESEND_FALLBACK_FROM", "Piatto <onboarding@resend.dev>")
+DEFAULT_FROM_EMAIL = "Piatto <onboarding@resend.dev>"
+
 EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 # ==================== STATIC FIX ====================

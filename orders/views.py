@@ -15,7 +15,9 @@ from menu.models import Dish
 
 # ===== Надсилання листа через Resend =====
 def send_order_email(order, request):
-    confirm_url = request.build_absolute_uri(reverse('orders:order_confirm', args=[order.token]))
+    confirm_url = request.build_absolute_uri(
+        reverse('orders:order_confirm', args=[order.token])
+    )
     subject = f"Підтвердження замовлення #{order.id}"
 
     html_content = (
@@ -24,15 +26,30 @@ def send_order_email(order, request):
         "<p>Страви:</p><ul>"
     )
     for item in order.items.all():
-        html_content += f"<li>{item.dish.name} ×{item.quantity} — {item.total_price} грн</li>"
-    html_content += f"</ul><p><b>Загальна сума:</b> {order.total_price} грн</p>"
-    html_content += f'<p>Підтвердьте замовлення за посиланням: <a href="{confirm_url}">{confirm_url}</a></p>'
+        html_content += (
+            f"<li>{item.dish.name} ×{item.quantity} — {item.total_price} грн</li>"
+        )
+    html_content += "</ul>"
+    html_content += f"<p><b>Загальна сума:</b> {order.total_price} грн</p>"
+    html_content += (
+        f'<p>Підтвердьте замовлення: '
+        f'<a href="{confirm_url}">{confirm_url}</a></p>'
+    )
+
+    # ===============================
+    # ВАЖЛИВО: fallback для домену
+    # ===============================
+    from_email = settings.DEFAULT_FROM_EMAIL
+
+    # Якщо домен не підтверджений — використовуємо безпечний Resend dev-адрес
+    if "@" not in from_email or "resend.dev" not in from_email:
+        from_email = "Piatto <onboarding@resend.dev>"
 
     response = requests.post(
         "https://api.resend.com/emails",
         headers={"Authorization": f"Bearer {settings.RESEND_API_KEY}"},
         json={
-            "from": settings.DEFAULT_FROM_EMAIL,
+            "from": from_email,
             "to": [order.email],
             "subject": subject,
             "html": html_content,
@@ -84,19 +101,25 @@ def order_create(request):
 
                 cart.clear()
 
-                # --- Надсилання листа через Resend ---
                 try:
                     send_order_email(order, request)
                 except Exception as e:
                     print(f"❌ Помилка при надсиланні через Resend: {e}")
 
-                messages.success(request, "Замовлення створено! Лист із підтвердженням надіслано.")
+                messages.success(
+                    request,
+                    "Замовлення створено! Лист із підтвердженням надіслано."
+                )
                 return redirect('menu:category_list')
     else:
         form = OrderCreateForm(initial=initial_data)
 
     total = cart.get_total_price()
-    return render(request, "orders/create_order.html", {"cart": cart, "form": form, "total": total})
+    return render(
+        request,
+        "orders/create_order.html",
+        {"cart": cart, "form": form, "total": total}
+    )
 
 
 @require_http_methods(["GET"])
@@ -124,6 +147,7 @@ def repeat_order(request, order_id):
         return redirect('register:login')
 
     order = get_object_or_404(Order, id=order_id, user=request.user)
+
     cart = Cart(request)
     cart.clear()
     for item in order.items.all():
@@ -137,12 +161,18 @@ def repeat_order(request, order_id):
         'payment_method': str(order.payment_method),
     }
     request.session.modified = True
+
     messages.info(request, f"Замовлення №{order.id} додано до кошика.")
     return redirect('orders:order_create')
 
 
 @require_POST
 def cancel_order(request, order_id):
-    order = get_object_or_404(Order, id=order_id, user=request.user, is_confirmed=False)
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user,
+        is_confirmed=False
+    )
     order.delete()
     return redirect('orders:order_history')
